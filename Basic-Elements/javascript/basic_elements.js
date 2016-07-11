@@ -4,11 +4,12 @@
 
 var canvas = document.getElementById("renderCanvas");
 var engine = new BABYLON.Engine(canvas, true);
+var counter = 0;
 
 var createScene = function () {
     var scene = new BABYLON.Scene(engine);
 
-    var camera = new BABYLON.ArcRotateCamera("Camera", 3 * Math.PI / 2, Math.PI / 8, 100, BABYLON.Vector3.Zero(), scene);
+    var camera = new BABYLON.ArcRotateCamera("Camera", 3 * Math.PI / 2, Math.PI / 5, 150, BABYLON.Vector3.Zero(), scene);
 
     camera.attachControl(canvas, true);
 
@@ -34,12 +35,13 @@ var createScene = function () {
     //Creation of a sphere
     //(name of the sphere, segments, diameter, scene)
     var sphere = BABYLON.Mesh.CreateSphere("sphere", 10.0, 10.0, scene);
-
     var sphere2 = BABYLON.Mesh.CreateSphere("sphere2", 12.0, 8.0, scene);
+    var sphere3 = BABYLON.Mesh.CreateSphere("sphere3", 12.0, 8.0, scene);
+    var sphere4 = BABYLON.Mesh.CreateSphere("sphere3", 12.0, 8.0, scene);
 
     //Creation of a plan
     //(name of the plane, size, scene)
-    var plan = BABYLON.Mesh.CreatePlane("plane", 10.0, scene);
+    var plan = BABYLON.Mesh.CreatePlane("plane", 10.0, scene, false, BABYLON.Mesh.DOUBLESIDE);
 
     //Creation of a cylinder
     //(name, height, diameter, tessellation, scene, updatable)
@@ -78,7 +80,7 @@ var createScene = function () {
     }
 
     // (name, array of paths, closeArray, closePath, offset, scene)
-    var ribbon = BABYLON.Mesh.CreateRibbon("ribbon", arrayOfPaths, false, false, 0, scene);
+    var ribbon = BABYLON.Mesh.CreateRibbon("ribbon", arrayOfPaths, false, false, 0, scene, BABYLON.Mesh.DOUBLESIDE);
 
 
     // Moving elements
@@ -90,6 +92,14 @@ var createScene = function () {
     knot.position.y = -10;
     ribbon.position = new BABYLON.Vector3(-10, -10, 20);
     ground.position.y = -20;
+
+
+    sphere3.parent = sphere;
+    sphere3.position.x = 60;
+
+    sphere4.parent = sphere3;
+    sphere4.position.y = 15;
+    sphere4.position.x = 10;
 
 
 
@@ -113,20 +123,82 @@ var createScene = function () {
     box7.parent = box1;
     box7.position.z = -10;
 
+
+
+    scene.registerBeforeRender(function(){
+        box.rotation.y += 0.002;
+        box2.rotation.x += 0.002;
+        box7.rotation.z += 0.010;
+        sphere.rotation.y += 0.010;
+        sphere.rotation.x += 0.010;
+        sphere.rotation.z += 0.010;
+        sphere3.rotation.x += 0.010;
+        sphere3.rotation.y += 0.010;
+        sphere3.rotation.z += 0.010;
+        sphere.rotation.z += 0.010;
+
+    });
+
+    //setInterval(function(){
+    //    counter = counter + (Math.PI/360);
+    //    box.rotation.y = counter * 2;
+    //    box2.rotation.x = counter * 5;
+    //    box7.rotation.z = counter * 10;
+    //    sphere.rotation.y = counter * 10;
+    //    sphere.rotation.x = counter * 10;
+    //    sphere.rotation.z = counter * 10;
+    //    sphere3.rotation.x = counter * 10;
+    //    sphere3.rotation.y = counter * 10;
+    //    sphere3.rotation.z = counter * 10;
+    //}, 1000/60);
+
+
+
+
     //creating floor
     ground2.parent = ground;
     ground2.position.z = -30;
 
 
     //material
-    var materialGround = new BABYLON.StandardMaterial("textureGround", scene);
-    materialGround.diffuseTexture = new BABYLON.Texture("../textures/grass.jpg", scene);
-    materialGround.diffuseTexture.uScale = 5.0;//Repeat 5 times on the Vertical Axes
-    materialGround.diffuseTexture.vScale = 5.0;//Repeat 5 times on the Horizontal Axes
-    materialGround.backFaceCulling = false;//Always show the front and the back of an element
+    var materialSphere = new BABYLON.StandardMaterial("eye", scene);
+    materialSphere.diffuseTexture = new BABYLON.Texture("textures/eye.png", scene);
+    sphere.material = materialSphere;
 
+    var materialSphere2 = new BABYLON.StandardMaterial("texture1", scene);
+    materialSphere2.diffuseColor = new BABYLON.Color3(1.0, 0.2, 0.7);
+    sphere2.material = materialSphere2;
+
+    var materialSpehere3 = new BABYLON.StandardMaterial("eye", scene);
+    materialSpehere3.diffuseTexture = new BABYLON.Texture("textures/eye.png", scene);
+    sphere3.material = materialSpehere3;
+
+    var materialSpehere4 = new BABYLON.StandardMaterial("eye", scene);
+    materialSpehere4.diffuseTexture = new BABYLON.Texture("textures/eye.png", scene);
+    sphere4.material = materialSpehere4;
+
+    var materialbox = new BABYLON.StandardMaterial("texture", scene);
+    materialbox.diffuseColor = new BABYLON.Color3(0.0, 0.5, 0.0);
+    box.material = materialbox;
+
+    var materialbox2 = new BABYLON.StandardMaterial("texture", scene);
+    materialbox2.diffuseColor = new BABYLON.Color3(10.0, 0.5, 0.0);
+    box2.material = materialbox2;
+
+    var materialbox3 = new BABYLON.StandardMaterial("texture", scene);
+    materialbox3.diffuseTexture = new BABYLON.Texture("textures/grass.jpg", scene);
+    box3.material = materialbox3;
+
+    var materialPlan = new BABYLON.StandardMaterial("texture", scene);
+    materialPlan.diffuseTexture = new BABYLON.Texture("textures/grass.jpg", scene);
+    plan.material = materialPlan;
+
+    var materialGround = new BABYLON.StandardMaterial("textureGround", scene);
     ground.material = materialGround;
     ground2.material = materialGround;
+    materialGround.diffuseTexture = new BABYLON.Texture("textures/wood.jpg", scene);
+
+
 
     return scene;
 };

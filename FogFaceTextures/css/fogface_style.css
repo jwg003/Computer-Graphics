@@ -1,0 +1,22 @@
+html, body {
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+#description {
+    position: absolute;
+    z-index: 2;
+    padding: 30px;
+    background-color: black;
+    opacity: 0.2;
+    color: white;
+}
+
+#renderCanvas {
+    width: 100%;
+    height: 100%;
+    touch-action: none;
+}
